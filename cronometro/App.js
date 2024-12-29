@@ -9,11 +9,11 @@ export default class App extends Component{
 
     this.state = {
       number: 0,
-      button: "start"
+      button: "start",
+      timersSave: []
     }
 
     this.timer = null;
-    this.timersSave = [];
     this.start = this.start.bind(this);
     this.save = this.save.bind(this);
     this.clear = this.clear.bind(this);
@@ -36,7 +36,7 @@ export default class App extends Component{
   }
 
   save(){
-    this.timersSave.push(this.state.number);
+    this.state.timersSave.push(this.state.number);
   }
 
   clear(){
@@ -55,7 +55,7 @@ export default class App extends Component{
       this.timer = null;
     }
 
-    this.timersSave = [];
+    this.state.timersSave = [];
 
   }
 
@@ -91,18 +91,25 @@ export default class App extends Component{
         </View>
 
         <View style={style.ranking}>
-          <ScrollView >
+          {/* <ScrollView >
             {
-              this.timersSave.map((timer) => {
+              this.state.timersSave.map((timer) => {
 
-                const index = this.timersSave.indexOf(timer);
+                const index = this.state.timersSave.indexOf(timer);
 
                 return(
                     <Text style={style.rankingText}>{index + 1}   -   {timer.toFixed(2)}s</Text>
                 );
               })
             }
-          </ScrollView>
+          </ScrollView> */}
+
+          <FlatList
+            data={this.state.timersSave}
+            renderItem={ ({item}) => <Timer data={item}/> }
+            keyExtractor={ (item) => this.state.timersSave.indexOf(item)}
+          />
+
         </View>
 
       </View>
@@ -110,6 +117,21 @@ export default class App extends Component{
   }
 
 }
+
+
+class Timer extends Component{
+  
+  render(){
+    return(
+      <View>
+        <Text style={style.rankingText}>
+          {this.props.data.toFixed(2)}
+        </Text>
+      </View>
+    );
+  }
+}
+
 
 const style = StyleSheet.create({
   conteiner: {
