@@ -8,6 +8,34 @@ export default class Feed extends Component{
 
         this.state = {
             feed: this.props.data,
+            liked: require("../../../assets/like.png")
+        };
+
+        this.likePost = this.likePost.bind(this);
+    }
+
+
+    likePost(userId){
+        let feed = this.state.feed;
+        
+        if(feed.likeada === false){
+            this.setState({liked: require("../../../assets/likeada.png")});
+            this.setState({
+                feed: {
+                    ...feed,
+                    likeada: true,
+                    likers: feed.likers + 1
+                }
+            });
+        }else{
+            this.setState({liked: require("../../../assets/like.png")});
+            this.setState({
+                feed: {
+                    ...feed,
+                    likeada: false,
+                    likers: feed.likers - 1
+                }
+            });
         }
     }
 
@@ -36,12 +64,14 @@ export default class Feed extends Component{
                 <View style={styles.footerPost}>
 
                     <View style={styles.buttonArea}>
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress={() => this.likePost(this.state.feed.id)}>
                             <Image
                                 style={styles.buttons}
-                                source={require("../../../assets/like.png")}
+                                source={this.state.liked}
                             />
                         </TouchableOpacity>
+
+                        <Text style={styles.numberOfLikes}>{this.state.feed.likers}</Text>
                         
                         <TouchableOpacity>
                             <Image 
@@ -66,7 +96,7 @@ export default class Feed extends Component{
 
 const styles = StyleSheet.create({
     component: {
-        marginBottom: 20
+        marginTop: 10
     },
 
     profileSection: {
@@ -102,11 +132,5 @@ const styles = StyleSheet.create({
     },
     nameUser: {
         fontWeight: 600
-        
-    },
-    descriptionPost: {
-        
     }
-
-
 });

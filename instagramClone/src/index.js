@@ -122,7 +122,7 @@ const style = StyleSheet.create({
     },
 
     section: {
-
+        flex: 1
     },
 
     feed: {
