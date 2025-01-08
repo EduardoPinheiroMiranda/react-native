@@ -1,4 +1,4 @@
-const baseURL = "https://economia.awesomeapi.com.br/json/all"
+const baseURL = "https://economia.awesomeapi.com.br/json"
 
 export async function getCurrency(codeCurrency){
 
@@ -9,4 +9,4 @@ export async function getCurrency(codeCurrency){
         .then(data => currency = data);
 
     return currency;
-}
+} 
