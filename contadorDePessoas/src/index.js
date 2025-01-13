@@ -6,39 +6,89 @@ export default function App(){
 
     const limit = 10;
     const [quantity, setQuantity] = useState(0);
+    const [notification, setNotification] = useState(false);
 
 
     function addClient(){
-        const sum = quantity + 1;
-        setQuantity(sum);
+      const result = quantity + 1;
+      setQuantity(result);
+
+      if(result === limit){
+        setNotification(true);
+      }
+    }
+
+    function removeClient(){
+      const result = quantity - 1;
+      setQuantity(result);
+      setNotification(false);
     }
 
 
 
     return (
-        <View style={styles.container}>
+      <View style={styles.container}>
 
-            <View style={styles.section}>
-                <Text style={styles.title}>Pessoas no restaurante:</Text>
-                <Text style={styles.indicator}>{quantity}</Text>
+        <View style={styles.section}>
 
-                <Text style={styles.alert}>O restaurante atingiu sua capacidade máxima de clientes!</Text>
+          <Text style={styles.title}>Pessoas no restaurante:</Text>
+          <Text style={styles.indicator}>{quantity}</Text>
 
-                <View style={styles.buttonArea}>
+          {
+            notification === true && (
+              <Text style={styles.alert}>O restaurante atingiu sua capacidade máxima de clientes!</Text>
+            )
+          }
+            
+
+          <View style={styles.buttonArea}>
+            
+            <View style={[styles.sectionbuttonAdd, {gap: 10}]}>
+              
+              {
+                quantity < limit ? 
+                  (
                     <TouchableOpacity 
-                        style={[styles.button, {backgroundColor: '#1D6AF0'}]}
-                        onPress={addClient}
+                      style={[styles.button, {backgroundColor: '#1D6AF0'}]}
+                      onPress={addClient}
                     >
-                        <Text style={styles.buttonText}>Adicionar</Text>
+                      <Text style={styles.buttonText}>Adicionar</Text>
                     </TouchableOpacity>
-
-                    <TouchableOpacity style={[styles.button, {backgroundColor: '#d4d4d4'}]}>
-                        <Text style={styles.buttonText}>Remover</Text>
-                    </TouchableOpacity>
-                </View>
+                  ) : 
+                  (
+                    <View style={[styles.button, {backgroundColor: '#d4d4d4'}]}>
+                      <Text style={styles.buttonText}>Adicionar</Text>
+                    </View>
+                  )
+              }
             </View>
 
+
+            <View style={[styles.sectionButtonRemove, {gap: 10}]}>
+              {
+                quantity === 0 ?
+                (
+                  <View style={[styles.button, {backgroundColor: '#d4d4d4'}]}>
+                    <Text style={styles.buttonText}>Remover</Text>
+                  </View>
+                ):
+                (
+                  <TouchableOpacity 
+                    style={[styles.button, {backgroundColor: '#1D6AF0'}]}
+                    onPress={removeClient}
+                  >
+                    <Text style={styles.buttonText}>Remover</Text>
+                  </TouchableOpacity>
+                )
+              }
+
+            </View>
+    
+          </View>
+
         </View>
+
+      </View>
     );
 }
 
