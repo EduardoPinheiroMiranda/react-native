@@ -1,36 +1,57 @@
 import { StatusBar } from 'expo-status-bar';
 import React , { useState, useEffect } from "react";
-import { Button, StyleSheet, Text, View } from 'react-native';
+import { TextInput, Button, StyleSheet, Text, View } from 'react-native';
 import { db } from './configs/firebase-connection.js';
-import { addDoc, collection, doc, getDoc, onSnapshot, setDoc } from "firebase/firestore";
+import { addDoc, collection, doc, getDoc, getDocs, onSnapshot, setDoc } from "firebase/firestore";
 
 
 export default function App() {
 
-  const [name, setName] = useState("carregando...");
+  const [name, setName] = useState("");
+  const [sonho, setSonho] = useState("");
+  const [idade, setIdade] = useState("");
+  const [users, setUser] = useState([]);
 
-  // useEffect(() => {
 
-  //   async function getUser(){
+  useEffect(() => {
 
-  //     const docRef = doc(db, "user", "sekaLYE98Y6M9uv74cCo");
+    async function getUser(){
 
-  //     // await getDoc(docRef)
-  //     // .then((snapshot) => {
-  //     //   setName(snapshot.data()?.name);
-  //     // }).catch((err) => {
-  //     //   console.log(err);
-  //     // });
-  //     // console.log("oi");
+      // const docRef = doc(db, "user", "sekaLYE98Y6M9uv74cCo");
 
-  //     onSnapshot(doc(db, "user", "sekaLYE98Y6M9uv74cCo"), (response) => {
-  //       console.log(response.data());
-  //     })
+      // await getDoc(docRef)
+      // .then((snapshot) => {
+      //   setName(snapshot.data()?.name);
+      // }).catch((err) => {
+      //   console.log(err);
+      // });
+      // console.log("oi");
 
-  //   }
-  //   getUser();
+      // onSnapshot(doc(db, "user", "sekaLYE98Y6M9uv74cCo"), (response) => {
+      //   console.log(response.data());
+      // })
 
-  // }, []);
+      getDocs(collection(db, "user")).then((snapshot) => {
+        let listUser = [];
+
+        snapshot.forEach((doc) =>{
+          listUser.push({
+            id: doc.id,
+            name: doc.data().name,
+            idade: doc.data().idade,
+            sonho: doc.data().sonho
+          })
+        });
+
+        setUser(listUser);
+      });
+      console.log(users)
+      
+
+    }
+    getUser();
+
+  }, []);
 
 
   async function insertData(){
@@ -48,9 +69,14 @@ export default function App() {
     // });
 
     await addDoc(collection(db, "user"), {
-      idade: "27",
-      name: "Ricardo",
-      sonho: "ficar rico tbm tbm"
+      idade: idade,
+      name: name,
+      sonho: sonho
+    }).then(() => {
+      setName();
+      setIdade();
+      setSonho();
+      alert("cadastrado");
     })
 
   }
@@ -59,6 +85,27 @@ export default function App() {
     <View style={styles.container}>
       <StatusBar style="auto" />
       <Text style={{fontSize: 20}}>Nome de usuário: {name}</Text>
+
+      <TextInput 
+        style={styles.input}
+        placeholder="digite seu nome..."
+        value={name}
+        onChangeText={(value) => setName(value)}
+      />
+      <TextInput 
+        style={styles.input}
+        placeholder="digite sua idade..."
+        value={idade}
+        keyboardType="numeric"
+        onChangeText={(value) => setIdade(value)}
+      />
+      <TextInput 
+        style={styles.input}
+        placeholder="digite seu sonho..."
+        value={sonho}
+        onChangeText={(value) => setSonho(value)}
+      />
+
       <Button title="adicionar" onPress={insertData}/>
       
     </View>
@@ -72,4 +119,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  input: {
+    width: 300,
+    height: 50,
+    borderWidth: 1,
+    borderRadius: 10,
+    paddingLeft: 20,
+    marginBottom: 20,
+    marginTop: 20
+  }
 });
