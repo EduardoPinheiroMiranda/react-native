@@ -16,4 +16,4 @@ export function AuthProvaider({ children }){
             {children}
         </AuthContext.Provider>
     );
-}
+} 
