@@ -4,6 +4,7 @@ import { NavigationContainer } from "@react-navigation/native";
 
 
 import { Routes } from "./routes";
+import { AuthProvaider } from "./contexts/auth";
 
 
 export function App(){
@@ -11,8 +12,10 @@ export function App(){
 
   return(
       <NavigationContainer>
-        <StatusBar style="auto"/>
-        <Routes/>
+        <AuthProvaider>
+          <StatusBar style="auto"/>
+          <Routes/>
+        </AuthProvaider>
       </NavigationContainer>
   );
 }
