@@ -6,13 +6,14 @@ export const AuthContext = createContext({});
 
 export function AuthProvaider({ children }){
 
-    const [user, setUser] = useState({
-        name: "eduardo"
-    });
+
+    function signUp(name, email, password){
+        console.log(name);
+    }
 
 
     return(
-        <AuthContext.Provider value={{user}}>
+        <AuthContext.Provider value={{signUp}}>
             {children}
         </AuthContext.Provider>
     );
