@@ -8,8 +8,10 @@ const Drawer = createDrawerNavigator();
 
 
 export function AppRoutes(){
-    <Drawer.Screen
-        name="Home"
-        component={Home}
-    />
+
+    return(
+        <Drawer.Navigator>
+            <Drawer.Screen name="Home" component={Home}/>
+        </Drawer.Navigator>
+    );
 }
