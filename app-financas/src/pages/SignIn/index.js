@@ -9,7 +9,6 @@ import { AuthContext } from "../../contexts/auth";
 export function SignIn(){
 
     const navigation = useNavigation();
-    const { user } = useContext(AuthContext);
 
 
 

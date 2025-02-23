@@ -1,4 +1,5 @@
 import React, { createContext, useState } from "react";
+import { useNavigation } from "@react-navigation/native";
 
 
 export const AuthContext = createContext({});
@@ -6,14 +7,40 @@ export const AuthContext = createContext({});
 
 export function AuthProvaider({ children }){
 
+    const navigation = useNavigation();
+    const [user, setUser] = useState(null);
+    const [loading, setLoading] = useState(false);
 
-    function signUp(name, email, password){
-        console.log(name);
+
+    async function signUp(name, email, password){
+        
+        try{
+            setLoading(true);
+
+            await fetch(
+                "http://10.0.0.100:3333/users",
+                {
+                    body: JSON.stringify({ name: name, email: email, password: password}),
+                    method: "POST",
+                    headers:{
+                        "Content-Type": "application/json"
+                    }
+                }
+            );
+
+            setLoading(false);
+            navigation.goBack();
+
+        }catch(err){
+            setLoading(false);
+            console.log(err);
+        }
+        
     }
 
 
     return(
-        <AuthContext.Provider value={{signUp}}>
+        <AuthContext.Provider value={{signed: !!user, signUp, loading}}>
             {children}
         </AuthContext.Provider>
     );

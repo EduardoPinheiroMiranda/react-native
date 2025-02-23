@@ -1,17 +1,26 @@
 import React, { useState, useContext } from "react";
 import { defaultStylePages } from "../../themes/defaultStylePages";
 import { styles } from "../SignIn/styles";
-import { View, Text, KeyboardAvoidingView, Platform, TextInput, TouchableOpacity } from "react-native";
+import { View, Text, KeyboardAvoidingView, Platform, TextInput, TouchableOpacity, ActivityIndicator } from "react-native";
 import { AuthContext } from "../../contexts/auth";
 
 
 export function SignUp(){
 
-    const { signUp } = useContext(AuthContext);
+    const { signUp, loading } = useContext(AuthContext);
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
+
+    function handlerSignUp(){
+        if(name === "" || email === "" || password === ""){
+            alert("Preencha todos os campos");
+            return;
+        }
+
+        signUp(name, email, password);
+    }
 
     return(
         <KeyboardAvoidingView 
@@ -23,7 +32,7 @@ export function SignUp(){
                 <TextInput 
                     placeholder="nome"
                     value={name}
-                    onChageText={(value) => setName(value)}
+                    onChangeText={(value) => setName(value)}
                 />
             </View>
 
@@ -31,7 +40,7 @@ export function SignUp(){
                 <TextInput
                     placeholder="email"
                     value={email}
-                    onChageText={(value) => setEmail(value)}
+                    onChangeText={(value) => setEmail(value)}
                 />
             </View>
 
@@ -39,7 +48,7 @@ export function SignUp(){
                 <TextInput 
                     placeholder="senha"
                     value={password}
-                    onChageText={(value) => setPassword(value)}
+                    onChangeText={(value) => setPassword(value)}
                     secureTextEntry={true}
                 />
             </View>
@@ -48,9 +57,15 @@ export function SignUp(){
             <TouchableOpacity 
                 style={styles.button} 
                 activeOpacity={0.8}
-                onPress={() => signUp(name, email, password)}
+                onPress={handlerSignUp}
             >
-                <Text style={styles.textButton}>Cadastrar</Text>
+                {
+                    loading ? 
+                        <ActivityIndicator size={24} color="#FFF"/>
+                    : 
+                        <Text style={styles.textButton}>Cadastrar</Text>
+                }
+                
             </TouchableOpacity>
             
         </KeyboardAvoidingView>
