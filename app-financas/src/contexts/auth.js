@@ -114,8 +114,13 @@ export function AuthProvaider({ children }){
     }
 
 
+    async function signOut(){
+        await AsyncStorage.clear().then(() => setUser(null));
+    }
+
+
     return(
-        <AuthContext.Provider value={{signed: !!user, signUp, signIn, loading, loadingPage, token}}>
+        <AuthContext.Provider value={{signed: !!user, signUp, signIn, signOut, loading, loadingPage, token}}>
             {children}
         </AuthContext.Provider>
     );
