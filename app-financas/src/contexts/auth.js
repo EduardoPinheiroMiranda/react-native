@@ -24,6 +24,7 @@ export function AuthProvaider({ children }){
                 const userToken = await AsyncStorage.getItem("userToken");
 
                 if(userToken){
+
                     await fetch(
                         `${HOST}/me`,
                         {
@@ -37,6 +38,7 @@ export function AuthProvaider({ children }){
                     .then((data) => setUser(data));
 
                     setLoadingPage(false);
+                    setToken(userToken);
                 }
                 
                 setLoadingPage(false);
