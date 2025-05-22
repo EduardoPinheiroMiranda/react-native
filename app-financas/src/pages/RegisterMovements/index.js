@@ -33,7 +33,7 @@ export function RegisterMovements(){
                     description: name,
                     value: Number(value),
                     type: type,
-                    date: format(new Date, "dd/mm/yyy")
+                    date: format(new Date, "dd/MM/yyy")
                 })
             });
 

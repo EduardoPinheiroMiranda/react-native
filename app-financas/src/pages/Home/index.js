@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { View, Text, Button, SafeAreaView, FlatList } from "react-native";
+import { View, Text, Button, SafeAreaView, FlatList, TouchableOpacity } from "react-native";
 import { styles } from "./styles";
 import { HOST } from "@env";
 import { AuthContext } from "../../contexts/auth";
@@ -10,6 +10,8 @@ import { Header } from "../../components/header";
 import { format } from "date-fns";
 import { useIsFocused } from "@react-navigation/native";
 import { defaultStylePages } from "../../themes/defaultStylePages";
+import { ItemList } from "../../components/ItemList";
+import Fontisto from '@expo/vector-icons/Fontisto';
 
 
 export function Home(){
@@ -17,17 +19,18 @@ export function Home(){
     const useFocused = useIsFocused();
     const { token } = useContext(AuthContext);
     const [listBalance, setListBalance] = useState([]);
+    const [listMovements, setListMovements] = useState([]);
 
 
     useEffect(() => {
 
         let isActive = true;
+        const dateFormated = format(new Date(), "dd/MM/yyyy");
 
-        async function getMovements(){
+
+        async function getBalance(){
 
             try{
-
-                const dateFormated = format(new Date(), "dd/mm/yyyy");
                 const request = await fetch(`${HOST}/balance?date=${dateFormated}`, {
                     method: "GET",
                     headers: {
@@ -46,6 +49,23 @@ export function Home(){
             }           
         }
 
+        async function getMovements(){
+            try{
+                const request = await fetch(`${HOST}/receives?date=${dateFormated}`, {
+                    method: "GET",
+                    headers: {
+                        "Authorization": `Bearer ${token}`
+                    },
+                });
+                const data = await request.json();
+                setListMovements(data);
+
+            }catch(err){
+                console.log(err);
+            }           
+        }
+
+        getBalance();
         getMovements();
         
 
@@ -54,16 +74,40 @@ export function Home(){
 
 
     return(
-        <SafeAreaView style={defaultStylePages.page}>
+        <SafeAreaView style={[defaultStylePages.page, styles.container]}>
             <Header title="Minhas movimentações"/>
 
-            <FlatList
-                data = {listBalance}
-                renderItem = {({item}) => <Balance data={item}/>}
-                horizontal = {true}
-                showsHorizontalScrollIndicator = {false}
-                keyExtractor = {item => item.tag}
-            />
+            <View>
+                <FlatList
+                    data = {listBalance}
+                    renderItem = {({item}) => <Balance data={item}/>}
+                    horizontal = {true}
+                    showsHorizontalScrollIndicator = {false}
+                    keyExtractor = {item => item.tag}
+                />
+            </View>
+
+        
+            <View style = {styles.listMovements}>
+
+                <View style = {styles.titleList}>
+                    <TouchableOpacity>
+                        <Fontisto name="date" size={26} color="black"/>
+                    </TouchableOpacity>
+                    
+                    <Text style = {styles.text}>Ultimas movimentações</Text>
+                </View>
+                
+                <FlatList
+                    data = {listMovements}
+                    renderItem = {({item}) => <ItemList type={item.type} value={item.value}/>}
+                    // horizontal = {false}
+                    showsVerticalScrollIndicator = {false}
+                    keyExtractor = {item => item.id}
+                />
+            </View>
+
+             
         </SafeAreaView>
     );
 }
