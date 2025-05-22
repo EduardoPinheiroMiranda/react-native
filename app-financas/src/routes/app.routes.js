@@ -1,7 +1,8 @@
 import React from "react";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 
-import { Home } from "../pages/home";
+import { Home } from "../pages/Home";
+import { RegisterMovements } from "../pages/RegisterMovements";
 
 
 const Drawer = createDrawerNavigator();
@@ -34,6 +35,7 @@ export function AppRoutes(){
             }}
         >
             <Drawer.Screen name="Home" component={Home}/>
+            <Drawer.Screen name="Registrar movimentação" component={RegisterMovements}/>
         </Drawer.Navigator>
     );
 }

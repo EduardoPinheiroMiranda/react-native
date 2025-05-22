@@ -9,6 +9,7 @@ import { Balance } from "../../components/balance";
 import { Header } from "../../components/header";
 import { format } from "date-fns";
 import { useIsFocused } from "@react-navigation/native";
+import { defaultStylePages } from "../../themes/defaultStylePages";
 
 
 export function Home(){
@@ -49,12 +50,11 @@ export function Home(){
         
 
         return () => isActive = false;
-    }, []);
+    }, [useFocused]);
 
-    console.log(listBalance)
 
     return(
-        <SafeAreaView>
+        <SafeAreaView style={defaultStylePages.page}>
             <Header title="Minhas movimentações"/>
 
             <FlatList
