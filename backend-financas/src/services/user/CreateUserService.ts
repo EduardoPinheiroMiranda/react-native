@@ -32,7 +32,7 @@ class CreateUserService{
         name: name,
         email: email,
         password: passwordHash,
-        balance,
+        balance: 0,
       },
       select:{
         id: true,

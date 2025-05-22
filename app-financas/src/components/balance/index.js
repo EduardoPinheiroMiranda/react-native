@@ -8,7 +8,7 @@ export function Balance({ data }){
     const labelName = useMemo(() => {
         if(data.tag === "saldo"){
             return{
-                label: "Entradas de hoje",
+                label: "Saldo",
                 color: "#3B3DBF",
             }
         }
@@ -20,7 +20,7 @@ export function Balance({ data }){
         }
         if(data.tag === "despesa"){
             return{
-                label: "Entradas de hoje",
+                label: "Despesas",
                 color: "#EF463A",
             }
         }

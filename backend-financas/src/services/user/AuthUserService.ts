@@ -35,7 +35,7 @@ class AuthUserService{
       "4f93ac9d10cb751b8c9c646bc9dbccb9",
       {
         subject: user.id,
-        expiresIn: '30d'
+        expiresIn: '30m'
       }
     )
 
