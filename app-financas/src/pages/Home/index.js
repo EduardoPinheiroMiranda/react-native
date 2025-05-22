@@ -35,7 +35,7 @@ export function Home(){
                     },
                 });
                 const data = await request.json();
-                console.log(data)
+                
 
                 if(isActive){
                     setListBalance(data);

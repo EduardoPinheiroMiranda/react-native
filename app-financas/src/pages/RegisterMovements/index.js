@@ -7,10 +7,12 @@ import { SelectType } from "../../components/SelectType";
 import { HOST } from "@env";
 import { format } from "date-fns";
 import { AuthContext } from "../../contexts/auth";
+import { useNavigation } from "@react-navigation/native";
 
 
 export function RegisterMovements(){
 
+    const navigation = useNavigation();
     const { token } = useContext(AuthContext);
     const [name, setName] = useState("");
     const [value, setValue] = useState(0);
@@ -21,7 +23,7 @@ export function RegisterMovements(){
         
         try{
 
-            const request = await fetch(`${HOST}/receive`, {
+            await fetch(`${HOST}/receive`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -35,9 +37,11 @@ export function RegisterMovements(){
                 })
             });
 
-            const data = await request.json();
-
-            console.log(data)
+            setName("");
+            setValue(0);
+            setType("receita");
+            
+            navigation.navigate("Home");
 
         }catch(err){
             console.log(err)
