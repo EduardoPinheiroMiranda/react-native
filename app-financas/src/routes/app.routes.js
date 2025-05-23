@@ -4,6 +4,7 @@ import { createDrawerNavigator } from "@react-navigation/drawer";
 import { Home } from "../pages/Home";
 import { RegisterMovements } from "../pages/RegisterMovements";
 import { Profile } from "../pages/Profile";
+import { CustomDrawer } from "../pages/CustomDrawer";
 
 
 const Drawer = createDrawerNavigator();
@@ -13,6 +14,7 @@ export function AppRoutes(){
 
     return(
         <Drawer.Navigator
+            drawerContent={(props) => <CustomDrawer {...props}/>}
             screenOptions = {{
                 headerShown: false,
 
