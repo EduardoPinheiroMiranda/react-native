@@ -10,7 +10,9 @@ class ListReceivesService{
 
     const receives = await prismaClient.receive.findMany({
       where:{
-        date: date,
+        date: {
+          lte: date
+        },
         user_id: user_id,
       },
       orderBy:{

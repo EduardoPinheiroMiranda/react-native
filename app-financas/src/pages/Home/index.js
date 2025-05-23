@@ -16,10 +16,12 @@ import Fontisto from '@expo/vector-icons/Fontisto';
 
 export function Home(){
     
+    const [deletedElement, setDeletedElement] = useState(false);
     const useFocused = useIsFocused();
     const { token } = useContext(AuthContext);
     const [listBalance, setListBalance] = useState([]);
     const [listMovements, setListMovements] = useState([]);
+
 
 
     useEffect(() => {
@@ -67,10 +69,29 @@ export function Home(){
 
         getBalance();
         getMovements();
+        setDeletedElement(false);
         
-
         return () => isActive = false;
-    }, [useFocused]);
+    }, [useFocused, deletedElement]);
+
+
+    async function deleteItem(itemId){
+
+            try{
+                const request = await fetch(`${HOST}/receives/delete?item_id=${itemId}`, {
+                    method: "DELETE",
+                    headers: {
+                        "Authorization": `Bearer ${token}`
+                    },
+                });
+                console
+                setDeletedElement(true);
+
+            }catch(err){
+                console.log(err);
+            }    
+
+        }
 
 
     return(
@@ -100,7 +121,7 @@ export function Home(){
                 
                 <FlatList
                     data = {listMovements}
-                    renderItem = {({item}) => <ItemList type={item.type} value={item.value}/>}
+                    renderItem = {({item}) => <ItemList data={item} deleteElement={deleteItem}/>}
                     // horizontal = {false}
                     showsVerticalScrollIndicator = {false}
                     keyExtractor = {item => item.id}
