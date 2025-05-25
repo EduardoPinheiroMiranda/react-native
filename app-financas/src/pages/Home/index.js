@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { View, Text, Button, SafeAreaView, FlatList, TouchableOpacity } from "react-native";
+import { View, Text, SafeAreaView, FlatList, TouchableOpacity, Modal } from "react-native";
 import { styles } from "./styles";
 import { HOST } from "@env";
 import { AuthContext } from "../../contexts/auth";
@@ -7,32 +7,33 @@ import { Balance } from "../../components/balance";
 
 
 import { Header } from "../../components/header";
-import { format } from "date-fns";
+import { format, formatDate } from "date-fns";
 import { useIsFocused } from "@react-navigation/native";
 import { defaultStylePages } from "../../themes/defaultStylePages";
 import { ItemList } from "../../components/ItemList";
 import Fontisto from '@expo/vector-icons/Fontisto';
+import { ModalDate } from "../../components/ModalDate";
 
 
 export function Home(){
     
-    const [deletedElement, setDeletedElement] = useState(false);
+    const [date, setDate] = useState(new Date());
     const useFocused = useIsFocused();
     const { token } = useContext(AuthContext);
     const [listBalance, setListBalance] = useState([]);
     const [listMovements, setListMovements] = useState([]);
-
+    const [visible, setVisible] = useState(false);
 
 
     useEffect(() => {
 
         let isActive = true;
-        const dateFormated = format(new Date(), "dd/MM/yyyy");
 
 
         async function getBalance(){
 
             try{
+                const dateFormated = format(date, "dd/MM/yyyy");
                 const request = await fetch(`${HOST}/balance?date=${dateFormated}`, {
                     method: "GET",
                     headers: {
@@ -53,6 +54,7 @@ export function Home(){
 
         async function getMovements(){
             try{
+                const dateFormated = format(date, "dd/MM/yyyy");
                 const request = await fetch(`${HOST}/receives?date=${dateFormated}`, {
                     method: "GET",
                     headers: {
@@ -69,30 +71,32 @@ export function Home(){
 
         getBalance();
         getMovements();
-        setDeletedElement(false);
         
         return () => isActive = false;
-    }, [useFocused, deletedElement]);
+    }, [useFocused, date]);
 
 
     async function deleteItem(itemId){
 
-            try{
-                const request = await fetch(`${HOST}/receives/delete?item_id=${itemId}`, {
-                    method: "DELETE",
-                    headers: {
-                        "Authorization": `Bearer ${token}`
-                    },
-                });
-                console
-                setDeletedElement(true);
+        try{
+            await fetch(`${HOST}/receives/delete?item_id=${itemId}`, {
+                method: "DELETE",
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                },
+            });
+            setDate(new Date());
 
-            }catch(err){
-                console.log(err);
-            }    
+        }catch(err){
+            console.log(err);
+        }    
 
-        }
+    }
 
+    function handlerFilterDate(date){
+        setDate(date);
+    }
+        
 
     return(
         <SafeAreaView style={[defaultStylePages.page, styles.container]}>
@@ -112,7 +116,7 @@ export function Home(){
             <View style = {styles.listMovements}>
 
                 <View style = {styles.titleList}>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={() => setVisible(true)}>
                         <Fontisto name="date" size={26} color="black"/>
                     </TouchableOpacity>
                     
@@ -122,13 +126,15 @@ export function Home(){
                 <FlatList
                     data = {listMovements}
                     renderItem = {({item}) => <ItemList data={item} deleteElement={deleteItem}/>}
-                    // horizontal = {false}
+                    horizontal = {false}
                     showsVerticalScrollIndicator = {false}
                     keyExtractor = {item => item.id}
                 />
             </View>
 
-             
+             <Modal visible={visible} animationType="slide" transparent={true}>
+                <ModalDate visible={() => setVisible(false)} filter={handlerFilterDate}/>
+             </Modal>
         </SafeAreaView>
     );
 }
