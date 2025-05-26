@@ -39,3 +39,6 @@ yarn-error.*
 # Build
 android
 ios
+
+# Keys from services
+firebase
